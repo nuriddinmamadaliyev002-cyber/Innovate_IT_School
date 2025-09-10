@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovate IT School - E'lon</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .brochure {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4f46e5;
+        }
+
+        .greeting h2 {
+            color: #1e293b;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .main-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #334155;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fef3c7 0%, #fcd34d 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .schools-section h3 {
+            color: #1e293b;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .schools-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            border-radius: 2px;
+        }
+
+        .schools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .school-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .school-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #4f46e5, #7c3aed);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .school-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .school-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+        }
+
+        .main-school {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1.05rem;
+        }
+
+        .attached-schools {
+            color: #64748b;
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+
+        .closing-message {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid #a7f3d0;
+        }
+
+        .closing-message p {
+            color: #065f46;
+            font-size: 1.05rem;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
+            border-radius: 12px;
+            margin-top: 30px;
+            border: 1px solid #e4e4e7;
+        }
+
+        .signature-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .signature-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .signature-line {
+            border-bottom: 2px solid #9ca3af;
+            width: 150px;
+            margin: 0 auto;
+            padding-bottom: 5px;
+        }
+
+        .director-title {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .tech-pattern {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2L2 7V10C2 16 6 20.09 12 22C18 20.09 22 16 22 10V7L12 2Z"/></svg>');
+            background-size: contain;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .brochure {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .schools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .schools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .signature-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="brochure">
+        <div class="tech-pattern"></div>
+        
+        <div class="header">
+            <h1>INNOVATE IT SCHOOL</h1>
+            <p class="subtitle">Zamonaviy IT ta'lim markazi</p>
+        </div>
+
+        <div class="content">
+            <div class="greeting">
+                <h2>Hurmatli maktab direktor va o'qituvchilari!</h2>
+            </div>
+
+            <div class="main-text">
+                <p>2024-yilda Andijon viloyati Baliqchi tumanida Yurtboshimiz tashabbusi bilan amalga oshirilayotgan <strong>"1 million dasturchi" loyihasi</strong> doirasida, Buyuk Britaniya va Singapur ta'lim dasturlari asosida faoliyat yurituvchi <strong>Innovate IT School</strong> o'z faoliyatini boshladi.</p>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Bugungi kunda ushbu ta'lim markazi tumanimizda bosqichma-bosqich kengayib bormoqda.</strong></p>
+            </div>
+
+            <div class="main-text">
+                <p>Shu munosabat bilan, <strong>Baliqchi tumanida jami 25 ta maktab hududida Innovate IT School filiallari</strong> tashkil etilishi belgilangan. Tumandagi barcha maktab o'quvchilari ushbu imkoniyatdan teng foydalanishlari uchun filial maktablarga hududiy yaqin maktablar biriktirildi. Endilikda o'quvchilar o'zlariga yaqin bo'lgan filial maktabni tanlab, Innovate IT School darslarida qatnashish imkoniyatiga ega bo'ladilar.</p>
+            </div>
+
+            <div class="schools-section">
+                <h3>Filial maktablar va ularga biriktirilgan maktablar ro'yxati:</h3>
+                
+                <div class="schools-grid">
+                    <div class="school-item">
+                        <div class="main-school">59-IDUM</div>
+                        <div class="attached-schools">33, 38-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">2-maktab</div>
+                        <div class="attached-schools">3-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">42-maktab</div>
+                        <div class="attached-schools">4-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">5-maktab</div>
+                        <div class="attached-schools">19, 30-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">36-maktab</div>
+                        <div class="attached-schools">43, 7, 38-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">8-maktab</div>
+                        <div class="attached-schools">9-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">10-maktab</div>
+                        <div class="attached-schools">15, 52-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">47-maktab</div>
+                        <div class="attached-schools">11, 20-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">48-maktab</div>
+                        <div class="attached-schools">12-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">13-maktab</div>
+                        <div class="attached-schools">17, 21-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">50-maktab</div>
+                        <div class="attached-schools">14-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">53-maktab</div>
+                        <div class="attached-schools">6, 16-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">34-maktab</div>
+                        <div class="attached-schools">18-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">22-maktab</div>
+                        <div class="attached-schools">26-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">23-maktab</div>
+                        <div class="attached-schools">51-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">25-maktab</div>
+                        <div class="attached-schools">24, 46-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">26-maktab</div>
+                        <div class="attached-schools">—</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">28-maktab</div>
+                        <div class="attached-schools">27-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">55-maktab</div>
+                        <div class="attached-schools">32, 56, 29-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">31-maktab</div>
+                        <div class="attached-schools">49, 28-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">54-maktab</div>
+                        <div class="attached-schools">32, 56, 55-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">35-maktab</div>
+                        <div class="attached-schools">41, 6, 12-maktablar</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">39-maktab</div>
+                        <div class="attached-schools">37-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">40-maktab</div>
+                        <div class="attached-schools">44-maktab</div>
+                    </div>
+                    <div class="school-item">
+                        <div class="main-school">45-maktab</div>
+                        <div class="attached-schools">27-maktab</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="closing-message">
+                <p>Innovate IT School filiallari faoliyatida sizning qo'llab-quvvatlashingiz va hamkorligingiz biz uchun juda muhimdir. Birgalikda tumanimiz yoshlari uchun zamonaviy ta'lim muhitini yaratamiz.</p>
+            </div>
+
+            <div class="signature-section">
+                <div class="signature-item">
+                    <div class="signature-label">Sana:</div>
+                    <div class="signature-line"></div>
+                </div>
+                <div class="signature-item">
+                    <div class="signature-label">Imzo:</div>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+
+            <div class="director-title">
+                INNOVATE IT SCHOOL DIREKTORI
+            </div>
+        </div>
+    </div>
+</body>
+</html>
