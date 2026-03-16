@@ -42,6 +42,7 @@ body {
   transition: opacity 0.5s ease, transform 0.5s ease;
   transform: translateX(60px);
   overflow: hidden;
+  padding-bottom: 48px;
 }
 .slide.active {
   opacity: 1;
@@ -56,26 +57,29 @@ body {
 /* ===== NAVIGATION ===== */
 .nav {
   position: fixed;
-  bottom: 32px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   z-index: 1000;
-  background: rgba(10,22,40,0.85);
+  background: rgba(10,22,40,0.75);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: 50px;
-  padding: 10px 20px;
+  padding: 6px 14px;
+  opacity: 0.5;
+  transition: opacity 0.3s;
 }
+.nav:hover { opacity: 1; }
 .nav-btn {
   background: var(--cyan);
   color: var(--navy);
   border: none;
   border-radius: 50%;
-  width: 38px; height: 38px;
-  font-size: 1.1rem;
+  width: 28px; height: 28px;
+  font-size: 0.85rem;
   cursor: pointer;
   font-weight: 700;
   transition: all 0.2s;
@@ -85,20 +89,20 @@ body {
 .nav-btn:disabled { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.3); cursor:default; transform:none; }
 .slide-counter {
   font-family: 'DM Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--muted);
-  min-width: 60px;
+  min-width: 40px;
   text-align: center;
 }
-.dot-nav { display:flex; gap:6px; }
+.dot-nav { display:flex; gap:5px; }
 .dot {
-  width:7px; height:7px;
+  width:5px; height:5px;
   border-radius:50%;
   background: rgba(255,255,255,0.2);
   cursor:pointer;
   transition: all 0.3s;
 }
-.dot.active { background: var(--cyan); width:20px; border-radius:4px; }
+.dot.active { background: var(--cyan); width:14px; border-radius:3px; }
 
 /* ===== BG ELEMENTS ===== */
 .bg-grid {
