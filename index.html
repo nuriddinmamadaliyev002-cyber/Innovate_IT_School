@@ -1,426 +1,955 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innovate IT School - E'lon</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovate IT School – Prezentatsiya</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --cyan: #00d4e8;
+  --cyan-dark: #0099aa;
+  --navy: #0a1628;
+  --navy2: #0f2040;
+  --gold: #f5c842;
+  --green: #22c55e;
+  --white: #ffffff;
+  --muted: rgba(255,255,255,0.55);
+  --card: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.1);
+}
 
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            line-height: 1.6;
-            color: #1a1a1a;
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-        .brochure {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            position: relative;
-        }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  overflow: hidden;
+}
 
-        .header {
-            background: #00d9ec;
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+/* ===== SLIDE SYSTEM ===== */
+.slides-wrapper { width:100vw; height:100vh; position:relative; }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            animation: float 20s ease-in-out infinite;
-        }
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateX(60px);
+  overflow: hidden;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+.slide.exit {
+  opacity: 0;
+  transform: translateX(-60px);
+}
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(2deg); }
-        }
+/* ===== NAVIGATION ===== */
+.nav {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1000;
+  background: rgba(10,22,40,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 10px 20px;
+}
+.nav-btn {
+  background: var(--cyan);
+  color: var(--navy);
+  border: none;
+  border-radius: 50%;
+  width: 38px; height: 38px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
+  display: flex; align-items:center; justify-content:center;
+}
+.nav-btn:hover { background: var(--gold); transform: scale(1.1); }
+.nav-btn:disabled { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.3); cursor:default; transform:none; }
+.slide-counter {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-width: 60px;
+  text-align: center;
+}
+.dot-nav { display:flex; gap:6px; }
+.dot {
+  width:7px; height:7px;
+  border-radius:50%;
+  background: rgba(255,255,255,0.2);
+  cursor:pointer;
+  transition: all 0.3s;
+}
+.dot.active { background: var(--cyan); width:20px; border-radius:4px; }
 
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+/* ===== BG ELEMENTS ===== */
+.bg-grid {
+  position:absolute; inset:0;
+  background-image: linear-gradient(rgba(0,212,232,0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,212,232,0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events:none;
+}
+.bg-glow {
+  position:absolute;
+  border-radius:50%;
+  filter: blur(80px);
+  pointer-events:none;
+}
 
-        .header .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
-        }
+/* ===== COMMON ===== */
+.tag {
+  display:inline-block;
+  background: rgba(0,212,232,0.15);
+  color: var(--cyan);
+  border: 1px solid rgba(0,212,232,0.3);
+  border-radius:20px;
+  padding: 4px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.tag.gold { background: rgba(245,200,66,0.15); color: var(--gold); border-color: rgba(245,200,66,0.3); }
+.tag.green { background: rgba(34,197,94,0.15); color: var(--green); border-color: rgba(34,197,94,0.3); }
 
-        .content {
-            padding: 40px 30px;
-        }
+/* ===========================
+   SLIDE 1 — COVER
+   =========================== */
+#s1 {
+  background: linear-gradient(135deg, #051020 0%, #0a1628 50%, #0d1f3c 100%);
+  display:flex; align-items:center; justify-content:center;
+}
+#s1 .bg-glow:nth-child(1) { width:500px;height:500px; background:rgba(0,212,232,0.12); top:-100px;left:-100px; }
+#s1 .bg-glow:nth-child(2) { width:400px;height:400px; background:rgba(245,200,66,0.07); bottom:-50px;right:-50px; }
 
-        .greeting {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border-left: 5px solid #4f46e5;
-        }
+.cover-inner { text-align:center; z-index:2; position:relative; padding:40px; }
+.cover-logo {
+  width: 90px; height:90px;
+  background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+  border-radius: 24px;
+  margin: 0 auto 28px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.4rem;
+  box-shadow: 0 0 60px rgba(0,212,232,0.4);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%,100% { box-shadow: 0 0 40px rgba(0,212,232,0.3); }
+  50% { box-shadow: 0 0 80px rgba(0,212,232,0.6); }
+}
+.cover-inner h1 {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.05;
+  background: linear-gradient(135deg, #fff 40%, var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom:16px;
+}
+.cover-inner .sub {
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  color: var(--muted);
+  max-width:560px;
+  margin: 0 auto 36px;
+  line-height:1.6;
+}
+.cover-pills { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius:40px;
+  padding: 8px 20px;
+  font-size:0.85rem;
+  font-weight:500;
+}
+.cover-bottom {
+  margin-top: 48px;
+  display:flex; gap:40px; justify-content:center;
+}
+.cover-stat { text-align:center; }
+.cover-stat .num { font-size:2.2rem; font-weight:800; color:var(--cyan); line-height:1; }
+.cover-stat .lbl { font-size:0.75rem; color:var(--muted); margin-top:4px; }
 
-        .greeting h2 {
-            color: #1e293b;
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
+/* ===========================
+   SLIDE 2 — IT SALARY CHART
+   =========================== */
+#s2 {
+  background: linear-gradient(160deg, #060e1c 0%, #0a1a30 100%);
+  display:flex; flex-direction:column;
+}
+.slide-header {
+  padding: 36px 48px 20px;
+  display:flex; align-items:flex-start; justify-content:space-between;
+  flex-shrink:0;
+}
+.slide-header-left h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight:800;
+  line-height:1.2;
+  margin-top:10px;
+}
+.slide-header-left p { color:var(--muted); font-size:0.9rem; margin-top:6px; }
+.slide-body { flex:1; padding:0 48px 20px; display:flex; gap:24px; min-height:0; }
 
-        .main-text {
-            font-size: 1rem;
-            line-height: 1.8;
-            color: #334155;
-            margin-bottom: 30px;
-        }
+.chart-container { flex:1.4; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; min-height:0; display:flex; flex-direction:column; }
+.chart-container canvas { flex:1; min-height:0; }
+.chart-title { font-size:0.8rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:14px; }
 
-        .highlight {
-            background: linear-gradient(120deg, #fef3c7 0%, #fcd34d 100%);
-            padding: 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-            border-left: 4px solid #f59e0b;
-        }
+.salary-cards { flex:1; display:flex; flex-direction:column; gap:10px; min-height:0; overflow-y:auto; }
+.salary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius:12px;
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition: border-color 0.2s;
+}
+.salary-card:hover { border-color: var(--cyan); }
+.sc-icon { font-size:1.5rem; flex-shrink:0; }
+.sc-info { flex:1; }
+.sc-name { font-size:0.88rem; font-weight:600; }
+.sc-range { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.sc-badge {
+  background: rgba(0,212,232,0.15);
+  color:var(--cyan);
+  border-radius:6px;
+  padding:2px 8px;
+  font-size:0.72rem;
+  font-weight:700;
+  flex-shrink:0;
+}
+.sc-badge.hot { background:rgba(245,200,66,0.15); color:var(--gold); }
 
-        .schools-section h3 {
-            color: #1e293b;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-align: center;
-            position: relative;
-        }
+/* ===========================
+   SLIDE 3 — IT IN UZ STATS
+   =========================== */
+#s3 {
+  background: linear-gradient(160deg, #060e1c 0%, #071525 100%);
+  display:flex; flex-direction:column;
+}
+.big-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; padding:0 48px; }
+.big-stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius:20px;
+  padding: 28px 24px;
+  position:relative;
+  overflow:hidden;
+  transition: transform 0.3s;
+}
+.big-stat-card:hover { transform:translateY(-4px); }
+.big-stat-card::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background: linear-gradient(90deg, var(--cyan), var(--cyan-dark));
+}
+.big-stat-card.gold-top::before { background: linear-gradient(90deg, var(--gold), #e6a800); }
+.big-stat-card.green-top::before { background: linear-gradient(90deg, var(--green), #16a34a); }
 
-        .schools-section h3::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
-            border-radius: 2px;
-        }
+.bsc-num {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight:900;
+  color:var(--cyan);
+  line-height:1;
+}
+.gold-top .bsc-num { color:var(--gold); }
+.green-top .bsc-num { color:var(--green); }
+.bsc-label { font-size:0.95rem; font-weight:600; margin-top:8px; color:#fff; }
+.bsc-sub { font-size:0.8rem; color:var(--muted); margin-top:4px; line-height:1.5; }
 
-        .schools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+.compare-section {
+  padding: 20px 48px 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.compare-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px 24px;
+}
+.compare-card h4 { font-size:0.8rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:16px; }
+.wage-bar-wrap { margin-bottom:12px; }
+.wage-label { display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:5px; }
+.wage-label span:last-child { color:var(--cyan); font-weight:700; }
+.wage-bar { height:8px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; }
+.wage-fill { height:100%; border-radius:4px; background: linear-gradient(90deg, var(--cyan), var(--cyan-dark)); transition:width 1.5s ease; }
+.wage-fill.gold { background: linear-gradient(90deg, var(--gold), #e6a800); }
 
-        .school-item {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            padding: 18px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+/* ===========================
+   SLIDE 4 — WHY INNOVATE
+   =========================== */
+#s4 {
+  background: linear-gradient(160deg, #060e1c 0%, #0a1a30 100%);
+  display:flex; flex-direction:column;
+}
+.why-grid {
+  display:grid;
+  grid-template-columns: repeat(3,1fr);
+  gap:16px;
+  padding:0 48px;
+  flex:1;
+}
+.why-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px 20px;
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.why-card:hover { border-color:var(--cyan); transform:translateY(-3px); }
+.why-card .wc-icon { font-size:2rem; margin-bottom:12px; }
+.why-card h4 { font-size:0.95rem; font-weight:700; margin-bottom:8px; color:#fff; }
+.why-card p { font-size:0.8rem; color:var(--muted); line-height:1.6; }
+.why-card .wc-tag {
+  position:absolute; top:14px; right:14px;
+  font-size:0.65rem; font-weight:700;
+  background:rgba(0,212,232,0.15);
+  color:var(--cyan);
+  border-radius:6px;
+  padding:2px 7px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.why-card .wc-tag.new { background:rgba(245,200,66,0.15); color:var(--gold); }
 
-        .school-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: #00d9ec;
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
+/* ===========================
+   SLIDE 5 — OUR PLAN
+   =========================== */
+#s5 {
+  background: linear-gradient(160deg, #060e1c 0%, #071a2e 100%);
+  display:flex; flex-direction:column;
+}
+.plan-body { flex:1; padding:0 48px 24px; display:flex; gap:24px; min-height:0; }
+.plan-left { flex:1.2; display:flex; flex-direction:column; gap:14px; }
+.plan-right { flex:1; display:flex; flex-direction:column; gap:14px; }
 
-        .school-item:hover::before {
-            transform: scaleY(1);
-        }
+.plan-stat {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 20px;
+  display:flex; align-items:center; gap:16px;
+}
+.plan-stat .ps-icon { font-size:2rem; flex-shrink:0; }
+.plan-stat .ps-num { font-size:1.8rem; font-weight:900; color:var(--cyan); line-height:1; }
+.plan-stat.gold .ps-num { color:var(--gold); }
+.plan-stat.green .ps-num { color:var(--green); }
+.plan-stat .ps-label { font-size:0.82rem; color:var(--muted); margin-top:2px; }
 
-        .school-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
-        }
+.path-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 20px;
+  flex:1;
+}
+.path-card h4 { font-size:0.82rem; font-weight:700; color:var(--cyan); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:12px; }
+.path-step {
+  display:flex; align-items:center; gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid var(--border);
+  font-size:0.82rem;
+}
+.path-step:last-child { border-bottom:none; }
+.path-step .ps-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--cyan); flex-shrink:0;
+}
+.path-step .ps-grade { color:var(--muted); font-size:0.72rem; margin-left:auto; font-family:'DM Mono',monospace; }
 
-        .main-school {
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 1.05rem;
-        }
+.cert-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.cert-badge {
+  background:rgba(0,212,232,0.1);
+  border:1px solid rgba(0,212,232,0.25);
+  border-radius:8px;
+  padding:5px 10px;
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--cyan);
+}
+.cert-badge.gold { background:rgba(245,200,66,0.1); border-color:rgba(245,200,66,0.25); color:var(--gold); }
 
-        .attached-schools {
-            color: #64748b;
-            margin-top: 5px;
-            font-size: 0.95rem;
-        }
+/* ===========================
+   SLIDE 6 — CALL TO ACTION
+   =========================== */
+#s6 {
+  background: radial-gradient(ellipse at 30% 40%, rgba(0,180,200,0.15) 0%, transparent 60%),
+              linear-gradient(160deg, #060e1c 0%, #0a1628 100%);
+  display:flex; align-items:center; justify-content:center;
+}
+.cta-inner { text-align:center; z-index:2; position:relative; max-width:720px; padding:40px; }
+.cta-inner h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight:900;
+  line-height:1.1;
+  margin:20px 0 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--cyan));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.cta-inner p { color:var(--muted); font-size:1rem; line-height:1.7; max-width:540px; margin:0 auto 36px; }
+.cta-asks { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:36px; }
+.ask-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 14px;
+  text-align:center;
+}
+.ask-card .ak-icon { font-size:1.8rem; margin-bottom:8px; }
+.ask-card .ak-title { font-size:0.85rem; font-weight:700; margin-bottom:4px; }
+.ask-card .ak-sub { font-size:0.75rem; color:var(--muted); line-height:1.5; }
+.cta-mission {
+  background: linear-gradient(135deg, rgba(0,212,232,0.12), rgba(0,212,232,0.04));
+  border:1px solid rgba(0,212,232,0.3);
+  border-radius:16px;
+  padding:20px 28px;
+  font-size:1.05rem;
+  font-weight:600;
+  color:var(--cyan);
+  line-height:1.6;
+}
 
-        .closing-message {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 30px;
-            border: 1px solid #a7f3d0;
-        }
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(0,212,232,0.3); border-radius:2px; }
 
-        .closing-message p {
-            color: #065f46;
-            font-size: 1.05rem;
-            font-weight: 500;
-            line-height: 1.7;
-        }
-
-        .signature-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 25px;
-            background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
-            border-radius: 12px;
-            margin-top: 30px;
-            border: 1px solid #e4e4e7;
-        }
-
-        .signature-item {
-            text-align: center;
-            flex: 1;
-        }
-
-        .signature-label {
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-
-        .signature-line {
-            border-bottom: 2px solid #9ca3af;
-            width: 150px;
-            margin: 0 auto;
-            padding-bottom: 5px;
-        }
-
-        .director-title {
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-top: 20px;
-            text-align: center;
-            letter-spacing: 0.5px;
-        }
-
-        .tech-pattern {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            opacity: 0.1;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24"><path d="M12 2L2 7V10C2 16 6 20.09 12 22C18 20.09 22 16 22 10V7L12 2Z"/></svg>');
-            background-size: contain;
-        }
-
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            
-            .brochure {
-                box-shadow: none;
-                border-radius: 0;
-            }
-            
-            .schools-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .content {
-                padding: 30px 20px;
-            }
-            
-            .schools-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .signature-section {
-                flex-direction: column;
-                gap: 20px;
-            }
-        }
-    </style>
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.slide.active .animate { animation: fadeUp 0.5s ease both; }
+.slide.active .animate:nth-child(1) { animation-delay:0.05s; }
+.slide.active .animate:nth-child(2) { animation-delay:0.12s; }
+.slide.active .animate:nth-child(3) { animation-delay:0.19s; }
+.slide.active .animate:nth-child(4) { animation-delay:0.26s; }
+.slide.active .animate:nth-child(5) { animation-delay:0.33s; }
+.slide.active .animate:nth-child(6) { animation-delay:0.40s; }
+</style>
 </head>
 <body>
-    <div class="brochure">
-        <div class="tech-pattern"></div>
-        
-        <div class="header">
-            <h1>INNOVATE IT SCHOOL</h1>
-            <p class="subtitle">Ingliz tili, Matematika va IT ga ixtisoslashgan, ingliz tilida ta'lim beruvchi markaz</p>
+
+<div class="slides-wrapper">
+
+  <!-- ========== SLIDE 1: COVER ========== -->
+  <div class="slide active" id="s1">
+    <div class="bg-glow"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-grid"></div>
+    <div class="cover-inner">
+      <div class="cover-logo">💡</div>
+      <div class="tag">Baliqchi tumani · 2024</div>
+      <h1 style="margin-top:16px">INNOVATE IT SCHOOL<br>Prezentatsiyasi</h1>
+      <p class="sub">Tuman hokimiga moddiy yordam so'rovi uchun tayyorlangan rasmiy taqdimot. Baliqchi tumanini O'zbekistonning IT Shaharchasiga aylantirish rejasi.</p>
+      <div class="cover-pills">
+        <div class="pill">🇬🇧 Britaniya dasturi</div>
+        <div class="pill">🇸🇬 Singapur metodikasi</div>
+        <div class="pill">🏆 IELTS · SAT · Foundation</div>
+      </div>
+      <div class="cover-bottom">
+        <div class="cover-stat">
+          <div class="num">25</div>
+          <div class="lbl">Filial maktab</div>
         </div>
-
-        <div class="content">
-            <div class="greeting">
-                <h2>Hurmatli maktab direktori va o'qituvchilari!</h2>
-            </div>
-
-            <div class="main-text">
-                <p>2024-yilda Andijon viloyati Baliqchi tumanida Yurtboshimiz tashabbusi bilan amalga oshirilayotgan <strong>"1 million dasturchi" loyihasi</strong> doirasida, Buyuk Britaniya va Singapur milliy maktab ta'lim dasturi asosida faoliyat yurituvchi <strong>Innovate IT School</strong> o'z faoliyatini boshladi.</p>
-            </div>
-
-            <div class="highlight">
-                <p><strong>Bugungi kunda ushbu ta'lim markazi tumanimizda bosqichma-bosqich kengayib bormoqda.</strong></p>
-            </div>
-
-            <div class="main-text">
-                <p>Shu munosabat bilan, <strong>Baliqchi tumanida jami 25 ta maktab hududida Innovate IT School filiallari</strong> tashkil etilishi belgilangan. Tumandagi barcha maktab o'quvchilari ushbu imkoniyatdan teng foydalanishlari uchun filial maktablarga hududiy yaqin maktablar biriktirildi. Endilikda o'quvchilar o'zlariga yaqin bo'lgan filial maktabni tanlab, Innovate IT School darslarida qatnashish imkoniyatiga ega bo'ladilar.</p>
-            </div>
-
-            <div class="schools-section">
-                <h3>Filial maktablar va ularga biriktirilgan maktablar ro'yxati:</h3>
-                
-                <div class="schools-grid">
-                    <div class="school-item">
-                        <div class="main-school">59-IDUM</div>
-                        <div class="attached-schools">33, 38-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">2-maktab</div>
-                        <div class="attached-schools">3-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">42-maktab</div>
-                        <div class="attached-schools">4-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">5-maktab</div>
-                        <div class="attached-schools">19, 30-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">36-maktab</div>
-                        <div class="attached-schools">43, 7, 38-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">8-maktab</div>
-                        <div class="attached-schools">9-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">10-maktab</div>
-                        <div class="attached-schools">15, 52-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">47-maktab</div>
-                        <div class="attached-schools">11, 20-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">48-maktab</div>
-                        <div class="attached-schools">12-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">13-maktab</div>
-                        <div class="attached-schools">17, 21-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">50-maktab</div>
-                        <div class="attached-schools">14-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">53-maktab</div>
-                        <div class="attached-schools">6, 16-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">34-maktab</div>
-                        <div class="attached-schools">18-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">22-maktab</div>
-                        <div class="attached-schools">26-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">23-maktab</div>
-                        <div class="attached-schools">51-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">25-maktab</div>
-                        <div class="attached-schools">24, 46-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">26-maktab</div>
-                        <div class="attached-schools">—</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">28-maktab</div>
-                        <div class="attached-schools">27-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">55-maktab</div>
-                        <div class="attached-schools">32, 56, 29-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">31-maktab</div>
-                        <div class="attached-schools">49, 28-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">54-maktab</div>
-                        <div class="attached-schools">32, 56, 55-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">35-maktab</div>
-                        <div class="attached-schools">41, 6, 12-maktablar</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">39-maktab</div>
-                        <div class="attached-schools">37-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">40-maktab</div>
-                        <div class="attached-schools">44-maktab</div>
-                    </div>
-                    <div class="school-item">
-                        <div class="main-school">45-maktab</div>
-                        <div class="attached-schools">27-maktab</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="closing-message">
-                <p>Innovate IT School filiallari faoliyatida sizning qo'llab-quvvatlashingiz va hamkorligingiz biz uchun juda muhimdir. Birgalikda tumanimiz yoshlari uchun zamonaviy ta'lim muhitini yaratamiz.</p>
-            </div>
+        <div class="cover-stat">
+          <div class="num">3,600</div>
+          <div class="lbl">Rejalashtirilgan o'quvchi</div>
         </div>
+        <div class="cover-stat">
+          <div class="num">1→9</div>
+          <div class="lbl">Sinf qamrovi</div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- ========== SLIDE 2: IT SALARY ========== -->
+  <div class="slide" id="s2">
+    <div class="bg-grid"></div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="tag">IT Bozori</div>
+        <h2>Eng ustuvor IT yo'nalishlari<br>va daromad darajalari</h2>
+        <p>O'zbekiston bo'yicha joriy oylik maoshlar (mln so'm)</p>
+      </div>
+      <div class="tag gold">2024 – 2025</div>
+    </div>
+    <div class="slide-body">
+      <div class="chart-container">
+        <div class="chart-title">Senior daraja oylik maoshi (mln so'm)</div>
+        <canvas id="salaryChart"></canvas>
+      </div>
+      <div class="salary-cards">
+        <div class="salary-card">
+          <div class="sc-icon">☁️</div>
+          <div class="sc-info">
+            <div class="sc-name">DevOps Engineering</div>
+            <div class="sc-range">Junior 10–15 · Middle 20–40 · Senior 40–80 mln</div>
+          </div>
+          <div class="sc-badge hot">🔥 TOP</div>
+        </div>
+        <div class="salary-card">
+          <div class="sc-icon">🤖</div>
+          <div class="sc-info">
+            <div class="sc-name">Data Science / AI</div>
+            <div class="sc-range">Junior 8–12 · Middle 15–30 · Senior 30–70 mln</div>
+          </div>
+          <div class="sc-badge hot">🔥 TOP</div>
+        </div>
+        <div class="salary-card">
+          <div class="sc-icon">🔐</div>
+          <div class="sc-info">
+            <div class="sc-name">Cybersecurity</div>
+            <div class="sc-range">Junior 7–12 · Middle 15–25 · Senior 30–60 mln</div>
+          </div>
+          <div class="sc-badge">Trend</div>
+        </div>
+        <div class="salary-card">
+          <div class="sc-icon">💻</div>
+          <div class="sc-info">
+            <div class="sc-name">Software Development</div>
+            <div class="sc-range">Junior 5–8 · Middle 10–20 · Senior 20–50 mln</div>
+          </div>
+          <div class="sc-badge">Mashhur</div>
+        </div>
+        <div class="salary-card">
+          <div class="sc-icon">📱</div>
+          <div class="sc-info">
+            <div class="sc-name">Mobile Development</div>
+            <div class="sc-range">Xorijiy kompaniya: $1500–$5000+</div>
+          </div>
+          <div class="sc-badge">Trend</div>
+        </div>
+        <div class="salary-card">
+          <div class="sc-icon">🎨</div>
+          <div class="sc-info">
+            <div class="sc-name">UI/UX Design</div>
+            <div class="sc-range">Junior 5–8 · Middle 10–18 · Senior 20–30 mln</div>
+          </div>
+          <div class="sc-badge">Talab yuqori</div>
+        </div>
+        <div class="salary-card">
+          <div class="sc-icon">🧪</div>
+          <div class="sc-info">
+            <div class="sc-name">QA / Software Testing</div>
+            <div class="sc-range">Junior 5–7 · Middle 10–15 · Senior 20–30 mln</div>
+          </div>
+          <div class="sc-badge">Barqaror</div>
+        </div>
+        <div class="salary-card">
+          <div class="sc-icon">📊</div>
+          <div class="sc-info">
+            <div class="sc-name">IT Project Manager</div>
+            <div class="sc-range">15–40 mln so'm</div>
+          </div>
+          <div class="sc-badge">Boshqaruv</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 3: IT IN UZBEKISTAN ========== -->
+  <div class="slide" id="s3">
+    <div class="bg-grid"></div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="tag">O'zbekiston IT sektori</div>
+        <h2>IT Park va milliy statistika</h2>
+        <p>IT soha – mamlakat iqtisodiyotining eng tez o'suvchi sektori</p>
+      </div>
+      <div class="tag green">Hozirgi holat</div>
+    </div>
+    <div style="padding:0 48px; display:flex; flex-direction:column; gap:20px; flex:1; padding-bottom:24px;">
+      <div class="big-stats animate">
+        <div class="big-stat-card">
+          <div class="bsc-num">150+</div>
+          <div class="bsc-label">IT Park tarkibidagi markazlar</div>
+          <div class="bsc-sub">Butun O'zbekiston bo'ylab faoliyat yurituvchi rasmiy IT ta'lim markazlari</div>
+        </div>
+        <div class="big-stat-card gold-top">
+          <div class="bsc-num">40,000+</div>
+          <div class="bsc-label">Jami bitiruvchilar</div>
+          <div class="bsc-sub">IT Park markazlaridan bugungi kunga qadar xatm etgan o'quvchilar soni</div>
+        </div>
+        <div class="big-stat-card green-top">
+          <div class="bsc-num">4,500</div>
+          <div class="bsc-label">Hozir tahsil olmoqda</div>
+          <div class="bsc-sub">Faol o'quvchilar soni — talab jadal o'sib bormoqda</div>
+        </div>
+      </div>
+      <div class="compare-section animate">
+        <div class="compare-card">
+          <h4>Maosh taqqoslamasi (o'rtacha oylik)</h4>
+          <div class="wage-bar-wrap">
+            <div class="wage-label"><span>O'zbekiston o'rtacha</span><span>6.3 mln</span></div>
+            <div class="wage-bar"><div class="wage-fill" style="width:42.5%"></div></div>
+          </div>
+          <div class="wage-bar-wrap">
+            <div class="wage-label"><span>IT sektori o'rtacha</span><span>14.8 mln</span></div>
+            <div class="wage-bar"><div class="wage-fill gold" style="width:100%"></div></div>
+          </div>
+          <div style="margin-top:12px; font-size:0.8rem; color:var(--gold); font-weight:600;">
+            💡 IT sektori o'rtacha maoshdan 2.3× ko'p beradi
+          </div>
+        </div>
+        <div class="compare-card">
+          <h4>Eng tez o'suvchi yo'nalishlar (2025)</h4>
+          <canvas id="trendChart" style="max-height:160px;"></canvas>
+        </div>
+      </div>
+      <div class="animate" style="background:rgba(245,200,66,0.08); border:1px solid rgba(245,200,66,0.25); border-radius:12px; padding:14px 20px; font-size:0.85rem; color:var(--gold); font-weight:500;">
+        ⚡ 12 dan ortiq o'quvchi IT Park orqali ish bilan ta'minlangan — bu ko'rsatkich yildan-yilga o'smoqda
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 4: WHY INNOVATE ========== -->
+  <div class="slide" id="s4">
+    <div class="bg-grid"></div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="tag">Nima uchun Innovate IT School?</div>
+        <h2>O'zbekistonda birinchi marta<br>joriy etilayotgan imkoniyatlar</h2>
+        <p>Davlat maktablarida hali mavjud bo'lmagan yondashuvlar</p>
+      </div>
+      <div class="tag gold">Yangilik</div>
+    </div>
+    <div class="why-grid" style="padding-bottom:24px;">
+      <div class="why-card animate">
+        <div class="wc-tag new">Yangi</div>
+        <div class="wc-icon">🏫</div>
+        <h4>Foundation dasturi (10–11 sinf)</h4>
+        <p>Buyuk Britaniya oliy ta'lim vazirligiga bog'liq xalqaro Foundation kursi — davlat maktablarida hali joriy etilmagan.</p>
+      </div>
+      <div class="why-card animate">
+        <div class="wc-tag new">Yangi</div>
+        <div class="wc-icon">🇬🇧</div>
+        <h4>Britaniya & Singapur dasturi</h4>
+        <p>1-sinfdan boshlab ingliz tilida dars — boshlang'ich sinflarda kompyuter savodxonligi milliy dasturdan yuqori darajada.</p>
+      </div>
+      <div class="why-card animate">
+        <div class="wc-tag">Imtiyoz</div>
+        <div class="wc-icon">🎓</div>
+        <h4>IELTS & SAT to'lovlari qoplandi</h4>
+        <p>Bitiruvchilarga xalqaro imtihon to'lovlari maktab tomonidan to'liq qoplanadi — moliyaviy to'siq yo'qoladi.</p>
+      </div>
+      <div class="why-card animate">
+        <div class="wc-tag">4 bosqich</div>
+        <div class="wc-icon">📜</div>
+        <h4>IT Sertifikatlash (1→9 sinf)</h4>
+        <p>O'quvchilar 1-sinfdan 9-sinfgacha 4 ta xalqaro IT sertifikatlash bosqichidan o'tadi — har bosqich karera yo'lini ochadi.</p>
+      </div>
+      <div class="why-card animate">
+        <div class="wc-tag new">Yangi</div>
+        <div class="wc-icon">🌍</div>
+        <h4>Diplom & 2-kursdan kirish</h4>
+        <p>Muvaffaqiyatli bitiruvchilar Buyuk Britaniya diplomini qo'lga kiritib, dunyodagi qator universitetlarga 2-kursdan qabul qilinadi.</p>
+      </div>
+      <div class="why-card animate">
+        <div class="wc-tag">Maqsad</div>
+        <div class="wc-icon">🏙️</div>
+        <h4>IT Shaharcha — Baliqchi</h4>
+        <p>25 ta maktab orqali 3,600 bola qamrab olinadi. Baliqchi tumani O'zbekistonning birinchi IT shahrini yaratish rejalashtirilmoqda.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 5: OUR PLAN ========== -->
+  <div class="slide" id="s5">
+    <div class="bg-grid"></div>
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <div class="tag">Kengayish rejasi</div>
+        <h2>Baliqchi tumani bo'yicha<br>amalga oshirish strategiyasi</h2>
+        <p>25 maktab · 3,600 o'quvchi · 144 ta har bir maktabda</p>
+      </div>
+      <div class="tag green">Rejalashtirish</div>
+    </div>
+    <div class="plan-body">
+      <div class="plan-left">
+        <div class="plan-stat animate">
+          <div class="ps-icon">🏫</div>
+          <div>
+            <div class="ps-num">25</div>
+            <div class="ps-label">Filial maktablar (butun tuman)</div>
+          </div>
+        </div>
+        <div class="plan-stat gold animate">
+          <div class="ps-icon">👦</div>
+          <div>
+            <div class="ps-num">3,600</div>
+            <div class="ps-label">Jami rejalashtirilgan o'quvchi</div>
+          </div>
+        </div>
+        <div class="plan-stat green animate">
+          <div class="ps-icon">📚</div>
+          <div>
+            <div class="ps-num">144</div>
+            <div class="ps-label">Har bir maktabda (16×9 sinf)</div>
+          </div>
+        </div>
+        <div class="path-card animate">
+          <h4>Sinf tarkibi</h4>
+          <div class="path-step">
+            <div class="ps-dot"></div>
+            <span>Har bir sinfda 16 ta o'quvchi</span>
+            <span class="ps-grade">1–9-sinf</span>
+          </div>
+          <div class="path-step">
+            <div class="ps-dot"></div>
+            <span>Har maktabda 9 sinf × 16 = 144 bola</span>
+            <span class="ps-grade">Standart</span>
+          </div>
+          <div class="path-step">
+            <div class="ps-dot"></div>
+            <span>25 maktab × 144 = 3,600 o'quvchi</span>
+            <span class="ps-grade">Jami</span>
+          </div>
+        </div>
+      </div>
+      <div class="plan-right">
+        <div class="path-card animate" style="flex:0">
+          <h4>O'quv yo'li (1-sinfdan Foundation gacha)</h4>
+          <div class="path-step"><div class="ps-dot"></div><span>Kompyuter savodxonligi (Britaniya dasturi)</span><span class="ps-grade">1–3 sinf</span></div>
+          <div class="path-step"><div class="ps-dot"></div><span>1-chi IT Sertifikat</span><span class="ps-grade">3-sinf</span></div>
+          <div class="path-step"><div class="ps-dot"></div><span>2-chi IT Sertifikat</span><span class="ps-grade">5-sinf</span></div>
+          <div class="path-step"><div class="ps-dot"></div><span>3-chi IT Sertifikat</span><span class="ps-grade">7-sinf</span></div>
+          <div class="path-step"><div class="ps-dot"></div><span>4-chi IT Sertifikat</span><span class="ps-grade">9-sinf</span></div>
+          <div class="path-step"><div class="ps-dot" style="background:var(--gold)"></div><span>Foundation dasturi (Britaniya)</span><span class="ps-grade" style="color:var(--gold)">10–11 sinf</span></div>
+          <div class="path-step"><div class="ps-dot" style="background:var(--green)"></div><span>UK diplom + Dunyo universitetlari 2-kurs</span><span class="ps-grade" style="color:var(--green)">Bitirish</span></div>
+        </div>
+        <div class="path-card animate">
+          <h4>Bitiruvchilarga beriladi</h4>
+          <div class="cert-row">
+            <div class="cert-badge">🏅 4× IT Sertifikat</div>
+            <div class="cert-badge gold">🇬🇧 UK Diplom</div>
+            <div class="cert-badge">📝 IELTS (to'lov qoplanadi)</div>
+            <div class="cert-badge">📝 SAT (to'lov qoplanadi)</div>
+            <div class="cert-badge gold">🎓 Univ. 2-kursdan kirish</div>
+          </div>
+          <div style="margin-top:12px; padding:10px; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); border-radius:8px; font-size:0.78rem; color:var(--green);">
+            ✅ Bularning barchasi hozircha davlat maktablarida mavjud emas
+          </div>
+        </div>
+        <div class="path-card animate">
+          <h4>Maqsad: IT Shaharcha</h4>
+          <p style="font-size:0.82rem; color:var(--muted); line-height:1.6;">
+            Baliqchi tumani <strong style="color:#fff">O'zbekistondagi birinchi IT Shaharcha</strong>ga aylantirilishi rejalashtirilmoqda. 25 ta maktab ko'lamidagi bu loyiha mamlakatda birinchi marta amalga oshirilmoqda.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SLIDE 6: CTA ========== -->
+  <div class="slide" id="s6">
+    <div class="bg-grid"></div>
+    <div class="bg-glow" style="width:400px;height:400px;background:rgba(0,212,232,0.1);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="cta-inner">
+      <div class="tag gold">Murojaat</div>
+      <h2>Hokimdan moddiy<br>yordam so'ralmoqda</h2>
+      <p>Innovate IT School loyihasini kengaytirish va Baliqchi tumanini O'zbekistonning IT Shaharchasiga aylantirish uchun quyidagi yo'nalishlarda ko'mak zarur.</p>
+      <div class="cta-asks">
+        <div class="ask-card">
+          <div class="ak-icon">🏗️</div>
+          <div class="ak-title">Infratuzilma</div>
+          <div class="ak-sub">25 ta filial maktabga jihozlash va ta'mirlash uchun moddiy yordam</div>
+        </div>
+        <div class="ask-card">
+          <div class="ak-icon">💻</div>
+          <div class="ak-title">Texnik ta'minot</div>
+          <div class="ak-sub">Kompyuter, internet va dars jihozlari bilan ta'minlash</div>
+        </div>
+        <div class="ask-card">
+          <div class="ak-icon">🤝</div>
+          <div class="ak-title">Ma'muriy ko'mak</div>
+          <div class="ak-sub">Maktablar bilan hamkorlikni rasmiylashtirish va hujjatlashtirish</div>
+        </div>
+      </div>
+      <div class="cta-mission">
+        🏙️ Baliqchi tumanini O'zbekistondagi <strong>birinchi IT Shaharcha</strong>ga aylantirish — 3,600 bola, 25 maktab, va ulug' kelajak uchun birga ishlaylik.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>←</button>
+  <div class="dot-nav" id="dotNav"></div>
+  <span class="slide-counter" id="counter">1 / 6</span>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+let chartsInit = {};
+
+function changeSlide(dir) {
+  const prev = current;
+  current = Math.max(0, Math.min(total - 1, current + dir));
+  if (prev === current) return;
+  slides[prev].classList.remove('active');
+  slides[prev].classList.add('exit');
+  setTimeout(() => slides[prev].classList.remove('exit'), 500);
+  slides[current].classList.add('active');
+  updateNav();
+  initSlideCharts(current);
+}
+
+function goTo(i) {
+  const prev = current;
+  current = i;
+  if (prev === current) return;
+  slides[prev].classList.remove('active');
+  slides[current].classList.add('active');
+  updateNav();
+  initSlideCharts(current);
+}
+
+function updateNav() {
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('counter').textContent = `${current+1} / ${total}`;
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === current));
+}
+
+// Build dots
+const dotNav = document.getElementById('dotNav');
+for (let i = 0; i < total; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotNav.appendChild(d);
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+});
+
+// Charts
+function initSlideCharts(idx) {
+  if (idx === 1 && !chartsInit['salary']) {
+    chartsInit['salary'] = true;
+    const ctx = document.getElementById('salaryChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['DevOps', 'Data/AI', 'Cyber\nsecurity', 'Cloud', 'Software\nDev', 'IT PM', 'UI/UX', 'QA Test'],
+        datasets: [
+          {
+            label: 'Junior (mln)',
+            data: [12.5, 10, 9.5, 12.5, 6.5, 15, 6.5, 6],
+            backgroundColor: 'rgba(0,212,232,0.3)',
+            borderColor: 'rgba(0,212,232,0.7)',
+            borderWidth: 1.5,
+            borderRadius: 4,
+          },
+          {
+            label: 'Middle (mln)',
+            data: [30, 22.5, 20, 27.5, 15, 27.5, 14, 12.5],
+            backgroundColor: 'rgba(0,153,170,0.4)',
+            borderColor: 'rgba(0,153,170,0.8)',
+            borderWidth: 1.5,
+            borderRadius: 4,
+          },
+          {
+            label: 'Senior (mln)',
+            data: [60, 50, 45, 42, 35, 30, 25, 25],
+            backgroundColor: 'rgba(245,200,66,0.5)',
+            borderColor: 'rgba(245,200,66,0.9)',
+            borderWidth: 1.5,
+            borderRadius: 4,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: 'rgba(255,255,255,0.7)', font: { size: 11, family: 'Outfit' }, boxWidth: 12 } }
+        },
+        scales: {
+          x: { ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 }, callback: v => v + ' mln' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+  }
+
+  if (idx === 2 && !chartsInit['trend']) {
+    chartsInit['trend'] = true;
+    const ctx2 = document.getElementById('trendChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'radar',
+      data: {
+        labels: ['AI/ML', 'Backend', 'DevOps', 'Cyber', 'Mobile', 'Cloud'],
+        datasets: [{
+          label: 'Talab darajasi',
+          data: [98, 85, 90, 82, 80, 75],
+          backgroundColor: 'rgba(0,212,232,0.15)',
+          borderColor: 'rgba(0,212,232,0.8)',
+          borderWidth: 2,
+          pointBackgroundColor: 'var(--cyan)',
+          pointRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          r: {
+            ticks: { display: false },
+            grid: { color: 'rgba(255,255,255,0.08)' },
+            pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 11, family: 'Outfit' } },
+            angleLines: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+  }
+}
+
+// Init chart on slide 2 if needed
+initSlideCharts(0);
+</script>
 </body>
 </html>
